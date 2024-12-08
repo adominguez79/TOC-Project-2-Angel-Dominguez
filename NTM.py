@@ -1,7 +1,7 @@
 import csv
 from collections import defaultdict, deque
 
-DEPTH_MAX = 1000
+DEPTH_MAX = 500
 
 #Class that helps NTM travel through and modify the tape
 class Tape:
@@ -42,6 +42,9 @@ class Tape:
     #dereferences tape for new branches
     def clone(self):
         return Tape(self.blank, self.symbols, self.head)
+
+    def output(self):
+        return ''.join(self.symbols[:self.head]),''.join(self.symbols[self.head:])
 
 class NTM:
 
@@ -88,22 +91,21 @@ class NTM:
 
 
     def accepts(self, string):
-        nondeterminism = 1
         depth = 0
-        transitionCount = 0
+        configurationCount = 0
         parentMap = {}
         self.restart(string)
-        queue = deque([(self,None)])
+        queue = deque([(self,None,0)])
 
         while len(queue) > 0:
             if depth >= DEPTH_MAX:
                 print("Execution Stoped: Depth limit reached")
-                break
-
-            tm, parent = queue.popleft()
-            transitions = tm.getTrans()
-
-            try: transitionCount += len(transitions)
+                return self.name, "Ran too long", depth, configurationCount
+            tm, parent, curDepth = queue.popleft()
+            transitions =    tm.getTrans()
+            depth = max(depth, curDepth) #gets highest depth
+      #      print([x.to_list() for x, _, _ in queue], curDepth)
+            try: configurationCount += len(transitions) #transitions create a configuration
             except(TypeError):
                 pass
 
@@ -114,26 +116,24 @@ class NTM:
                     while tm:
                         path.append(tm.to_list())
                         tm = parentMap.get(tm)
-                    return self.name, path[::-1], len(path), depth, nondeterminism
+                    return self.name, path[::-1], depth, configurationCount
            
             else:
                 # Add copy of NTM if not deterministic
                 for trans in transitions[1:]:
                     clonedTM = tm.clone().execTrans(trans)
-                    queue.append((clonedTM,tm))
+                    queue.append((clonedTM,tm,curDepth+1))
                     parentMap[clonedTM] = tm
-                    nondeterminism +=1 #increase since configuration is non deterministics
-                # execute the deterministic transition
+                # execute and add the deterministic transition
                 determTM = tm.clone().execTrans(transitions[0])
-                queue.append((determTM,tm))
+                queue.append((determTM,tm,curDepth+1))
                 parentMap[determTM] = tm
-                depth+=1
-        return self.name, None, transitionCount, depth, nondeterminism
+        return self.name, 'Rejected', depth, configurationCount
     
     def to_list(self):
         tempTape = self.tape.clone()
-        tempTape.symbols.insert(self.tape.head,self.state)
-        return tempTape.symbols
+        left, right = tempTape.output()
+        return [left,self.state,right]
 
     
 #Parse CSV file into NTM
@@ -169,11 +169,17 @@ if __name__ == '__main__':
     with open(inputFile, 'r') as inputs:
         for input in inputs:
             input = input.rstrip()
-            name,path,transitions,depth,nondeter = N1_ntm.accepts(input)
-            if path is not None:
-                print(f'Machine Name: {name}\n"{input}" accepted in {transitions} steps.\nLevel of nondeterminism: {nondeter}\nPath:\n{path}\n')
+            result = None
+            name,path,depth,configCount = N1_ntm.accepts(input)
+            if type(path) == list:
+                result = 'Success'
+                print(f'Machine Name: {name}\n"{input}" accepted in {depth} steps.\nLevel of nondeterminism:= {configCount/depth}\nPath:\n{path}\n')
             else:
+                result = path
                 print(f'Machine Name:{name}\n"{input}" rejected after {depth} steps.\n')
+            with open('output.csv', 'a',newline='') as csvfile:
+                csvwriter = csv.writer(csvfile)
+                csvwriter.writerow([name,input,result,depth,configCount,configCount/depth])
 
 
 

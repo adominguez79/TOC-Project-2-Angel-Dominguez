@@ -1,0 +1,44 @@
+name,string,result,depth,#config,avg.nondeter,comments
+a plus,,Rejected,1,1,1.0
+a plus,a,Success,2,4,2.0
+a plus,aaa,Success,4,10,2.5
+a plus,aaaa,Success,5,13,2.6
+a plus,aaaaaaaaaaaaaaa,Success,16,46,2.875
+equal_01,,Success,1,1,1.0
+equal_01,1,Rejected,1,1,1.0
+equal_01,01,Success,5,8,1.6
+equal_01,1100,Success,15,21,1.4
+equal_01,1010,Success,13,20,1.5384615384615385
+equal_01,00110,Rejected,15,20,1.3333333333333333
+equal_01,11011000,Success,49,66,1.346938775510204
+equal_01,11111111111111111111111111111111111111111000000000000001110000000000000000000000000001000000000000000000000000000111111111111111111111111111111111111111111110000000000000000000000000000000000000000000000001111111111111111111111111111111100000000000000000000000000000011101010101101011010110101101010101010011001010101010101010101010101010101010101010101010101010001010011011111010101100110101001010,Ran too long,500,516,1.032
+Equal 01s DTM,,Success,1,1,1.0
+Equal 01s DTM,1,Rejected,1,1,1.0
+Equal 01s DTM,01,Success,5,5,1.0
+Equal 01s DTM,1100,Success,15,15,1.0
+Equal 01s DTM,1010,Success,13,13,1.0
+Equal 01s DTM,00110,Rejected,15,15,1.0
+Equal 01s DTM,11011000,Success,49,49,1.0
+Equal 01s DTM,11111111111111111111111111111111111111111000000000000001110000000000000000000000000001000000000000000000000000000111111111111111111111111111111111111111111110000000000000000000000000000000000000000000000001111111111111111111111111111111100000000000000000000000000000011101010101101011010110101101010101010011001010101010101010101010101010101010101010101010101010001010011011111010101100110101001010,Ran too long,500,501,1.002
+a*b*c* Nondeterministic,,Success,2,2,1.0
+a*b*c* Nondeterministic,a,Success,2,6,3.0
+a*b*c* Nondeterministic,c,Success,2,3,1.5
+a*b*c* Nondeterministic,b,Success,2,4,2.0
+a*b*c* Nondeterministic,aa,Success,3,10,3.3333333333333335
+a*b*c* Nondeterministic,bba,Rejected,2,6,3.0
+a*b*c* Nondeterministic,caca,Rejected,1,2,2.0
+a*b*c* Nondeterministic,abb,Success,4,18,4.5
+a*b*c* Nondeterministic,abc,Success,4,16,4.0
+a*b*c* Nondeterministic,aaaabbbcccc,Success,12,52,4.333333333333333
+a*b*c* Nondeterministic,aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,Success,98,498,5.081632653061225
+a*b*c* Deterministic,,Success,1,1,1.0, Deterministic machines only has avg nondeterministic val of 1
+a*b*c* Deterministic,a,Success,2,2,1.0
+a*b*c* Deterministic,c,Success,2,2,1.0
+a*b*c* Deterministic,b,Success,2,2,1.0
+a*b*c* Deterministic,aa,Success,3,3,1.0
+a*b*c* Deterministic,bba,Rejected,2,2,1.0
+a*b*c* Deterministic,caca,Rejected,1,1,1.0
+a*b*c* Deterministic,abb,Success,4,4,1.0
+a*b*c* Deterministic,abc,Success,4,4,1.0
+a*b*c* Deterministic,aaaabbbcccc,Success,12,12,1.0
+a*b*c* Deterministic,aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,Success,98,98,1.0
